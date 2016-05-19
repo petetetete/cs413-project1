@@ -81,6 +81,13 @@ function onKeyDown(key) {
 	if (calendar.visible) {
 		calendar.visible = false;
 		startText.visible = false;
+		return;
+	}
+
+	// If a game has just ended and the user tries to move again
+	if (gameOver.visible) {
+		restartGame();
+		return;
 	}
 
 	// Variable to check if the player actually pressed a valid key to move
@@ -126,12 +133,22 @@ function onKeyDown(key) {
     // Order of operations is ipmortant here, newly spawned enemies don't move in the same tick
     // Score is always incremented regardless of whether you die in this frame or not, you still clicked the button
     if (moved) {
+    	++score;
     	updateScore();
     	moveEnemies();
 
     	if (hitEnemy()) {
+    		// Bring up game over screen and disable event listeners
     		gameOver.visible = true;
     		document.removeEventListener('keydown', onKeyDown);
+    		gameport.removeEventListener("click", onKeyDown);
+
+    		// After a second, allow the user to click again to keep playing
+    		setTimeout(function() {
+    			startText.visible = true;
+    			document.addEventListener("keydown", onKeyDown);
+				gameport.addEventListener("click", onKeyDown);
+			}, 1000);
     	}
     	else {
     		if ((score) % 10 === 0 || score === 1) spawnEnemy();	// Spawn an enemy every 10 moves and the starting move
@@ -181,6 +198,28 @@ function moveEnemies() {
 	}
 }
 
+// Function used to 
+function restartGame() {
+
+	// Remove all existing enemies
+	while(enemies.children[0]) {
+		enemies.removeChild(enemies.children[0]);
+	}
+
+	// Reset score
+	score = 0;
+	updateScore();
+
+	// Respawn player
+	playerSpawn = getSpawnCoords();
+	player.position.x = playerSpawn[0];
+	player.position.y = playerSpawn[1];
+
+	// Clear game over dialog from the stage
+	gameOver.visible = false;
+	startText.visible = false;
+}
+
 // Function used to check if the player has collided with any enemy
 function hitEnemy() {
 	baddies = enemies.children;
@@ -214,10 +253,10 @@ function spawnEnemy() {
 
 // Function used to simply update the current score, or turns the player has been alive
 function updateScore() {
-	scoreText.text = "Score: " + ++score;
+	scoreText.text = "Score: " + score;
 }
 
-// Function to run the game
+// Function to run the game and handle animation frames
 function animate(timestamp) {
 	requestAnimationFrame(animate);
 	renderer.render(stage);
