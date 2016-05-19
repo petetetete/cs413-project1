@@ -15,11 +15,11 @@ var stage = new PIXI.Container();
 
 // Initially load the textures and store them
 var textures = {
-	calendar: PIXI.Texture.fromImage("sprites/calendar.png"), 
-	floor: PIXI.Texture.fromImage("sprites/floor.png"), 
-	gameover: PIXI.Texture.fromImage("sprites/gameover.png"),
-	player: PIXI.Texture.fromImage("sprites/player.png"),
-	enemies: [PIXI.Texture.fromImage("sprites/enemy.png"), PIXI.Texture.fromImage("sprites/enemy1.png"), PIXI.Texture.fromImage("sprites/enemy2.png")]
+	calendar: PIXI.Texture.fromImage("assets/calendar.png"), 
+	floor: PIXI.Texture.fromImage("assets/floor.png"), 
+	gameover: PIXI.Texture.fromImage("assets/gameover.png"),
+	player: PIXI.Texture.fromImage("assets/player.png"),
+	enemies: [PIXI.Texture.fromImage("assets/enemy.png"), PIXI.Texture.fromImage("assets/enemy1.png"), PIXI.Texture.fromImage("assets/enemy2.png")]
 }
 
 // Create the background texture
