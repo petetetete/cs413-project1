@@ -11,6 +11,13 @@
 			font-weight: normal;
 			margin: 7px;
 		}
+		td {
+			padding: 3px 7px;
+			border-left: 1px solid black;
+		}
+		td:last-child {
+			border-right: 1px solid black;
+		}
 		.material {
 			position: relative;
 			background: #fff;
@@ -27,7 +34,7 @@
 	</style>
 </head>
 <body>
-	<div style="width:80%;margin:0 auto;max-width:900px;text-align:center;">
+	<div style="width:80%;margin:0 auto;max-width:820px;text-align:center;">
 		<div class="material">
 			<h1>Just a Regular Tuesday</h1>
 			<div id="gameport" style="margin:0 auto"></div>
@@ -35,8 +42,20 @@
 
 		<div class="material">
 			<h1>Instructions</h1>
-			<p>Welcome to just a regular tuesday. There is absolutely nothing abnormal with anything that is happening around you. What? You see a ghost looking thing in some sort of cellar-like dungeon? I have no idea what you're talking about, this is just a regular Tuesday full of regular Tuesday things.</p>
-			<p>Use either the <b>arrow keys</b> or <b>wasd</b> to control our hero, avoiding the perils around him for as long as possible. This rogue-like, single-screen, survival game will test just how well you can plan ahead and dodge hordes of pixelated foes. Similar to the genre's namesake, <a href="https://en.wikipedia.org/wiki/Rogue_(video_game)" style="text-decoration:none;">Rogue</a>, <b>the enemies only move when you move</b>, so it's up to you whether this is a game of strategy, or running-and-gunning.</p>
+
+			<table align="center">
+				<tr>
+					<td><b>W</b> or <b>&#8593;</b> - Move <b>up</b> one space</td>
+					<td><b>A</b> or <b>&#8592;</b> - Move <b>left</b> one space</td>
+				</tr>
+				<tr>
+					<td><b>S</b> or <b>&#8595;</b> - Move <b>down</b> one space</td>
+					<td><b>D</b> or <b>&#8594;</b> - Move <b>right</b> one space</td>
+				</tr>
+			</table>
+
+			<p>Today is just a regular Tuesday. There is absolutely nothing abnormal with anything that is happening around you. What? You see a ghost looking thing in some sort of cellar-like dungeon? I have no idea what you're talking about, this is just a regular Tuesday full of regular Tuesday things.</p>
+			<p>Use either the <b>arrow keys</b> or <b>wasd</b> to control the everyday hero, avoiding the perils around him for as long as possible. This rogue-like, single-screen, survival game will test just how well you can plan ahead and dodge hordes of pixelated foes. Similar to the genre's namesake, <a href="https://en.wikipedia.org/wiki/Rogue_(video_game)" style="text-decoration:none;">Rogue</a>, <b>the enemies only move when you move</b>, so it's up to you whether you plan out methodically, or sprint around like a mad-man.</p>
 		</div>
 
 		<div class="material">
@@ -45,12 +64,12 @@
 		</div>
 		
 		<script>
-		(function() {
-		var d = document, s = d.createElement('script');
-		s.src = 'http://nau-cs413.disqus.com/embed.js';
-		s.setAttribute('data-timestamp', +new Date());
-		(d.head || d.body).appendChild(s);
-		})(); 
+			(function() {
+			var d = document, s = d.createElement('script');
+			s.src = 'http://nau-cs413.disqus.com/embed.js';
+			s.setAttribute('data-timestamp', +new Date());
+			(d.head || d.body).appendChild(s);
+			})(); 
 		</script>
 	</div>
 

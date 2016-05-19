@@ -42,6 +42,7 @@ player.position.y = playerSpawn[1];
 stage.addChild(player);
 
 // Create the game over screen and hide it from view
+// Game over is a seperate container so that future features could be added
 var gameOver = new PIXI.Container();
 gameOverPicture = new PIXI.Sprite(textures.gameover);
 gameOverPicture.position.x = 0;
@@ -76,6 +77,7 @@ gameport.addEventListener("click", onKeyDown);
 // Function used to handle key presses and movement in game
 function onKeyDown(key) {
 
+	// If the game has just begun, remove the intro screen on any action
 	if (calendar.visible) {
 		calendar.visible = false;
 		startText.visible = false;
@@ -122,6 +124,7 @@ function onKeyDown(key) {
 
     // If the user did press a valid key
     // Order of operations is ipmortant here, newly spawned enemies don't move in the same tick
+    // Score is always incremented regardless of whether you die in this frame or not, you still clicked the button
     if (moved) {
     	updateScore();
     	moveEnemies();
@@ -131,7 +134,7 @@ function onKeyDown(key) {
     		document.removeEventListener('keydown', onKeyDown);
     	}
     	else {
-    		if ((score) % 10 === 0 || score === 1) spawnEnemy();	// Spawn an enemy every 10 waves and the starting wave
+    		if ((score) % 10 === 0 || score === 1) spawnEnemy();	// Spawn an enemy every 10 moves and the starting move
     	}
     }
 }
@@ -143,6 +146,7 @@ function moveEnemies() {
 	baddies = enemies.children;
 	probMoveTowards = .75;
 
+	// Get the players current position
 	px = player.position.x;
 	py = player.position.y;
 
@@ -193,12 +197,6 @@ function getSpawnCoords() {
 	return [x, y];
 }
 
-// Function used to simply update the current score, or turns the player has been alive
-function updateScore() {
-	scoreText.text = "Score: " + ++score;
-}
-
-
 // Function used to spawn a new enemy
 function spawnEnemy() {
 	enemy = new PIXI.Sprite(textures.enemies[Math.floor(Math.random()*textures.enemies.length)]);
@@ -212,6 +210,11 @@ function spawnEnemy() {
 	enemy.position.x = spawnCoords[0];
 	enemy.position.y = spawnCoords[1];
 	enemies.addChildAt(enemy, 0);
+}
+
+// Function used to simply update the current score, or turns the player has been alive
+function updateScore() {
+	scoreText.text = "Score: " + ++score;
 }
 
 // Function to run the game
