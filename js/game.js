@@ -13,8 +13,17 @@ gameport.appendChild(renderer.view);
 // Create main stage container
 var stage = new PIXI.Container();
 
+// Initially load the textures and store them
+var textures = {
+	calendar: PIXI.Texture.fromImage("sprites/calendar.png"), 
+	floor: PIXI.Texture.fromImage("sprites/floor.png"), 
+	gameover: PIXI.Texture.fromImage("sprites/gameover.png"),
+	player: PIXI.Texture.fromImage("sprites/player.png"),
+	enemies: [PIXI.Texture.fromImage("sprites/enemy.png"), PIXI.Texture.fromImage("sprites/enemy1.png"), PIXI.Texture.fromImage("sprites/enemy2.png")]
+}
+
 // Create the background texture
-floorPicture = new PIXI.Sprite(PIXI.Texture.fromImage("sprites/floor.png"));
+floorPicture = new PIXI.Sprite(textures.floor);
 floorPicture.position.x = 0;
 floorPicture.position.y = 0;
 stage.addChild(floorPicture);
@@ -26,7 +35,7 @@ enemies.position.y = 0;
 stage.addChild(enemies);
 
 // Create the player sprite and determine his spawn
-var player = new PIXI.Sprite(PIXI.Texture.fromImage("sprites/player.png"));
+var player = new PIXI.Sprite(textures.player);
 playerSpawn = getSpawnCoords();
 player.position.x = playerSpawn[0];
 player.position.y = playerSpawn[1];
@@ -34,7 +43,7 @@ stage.addChild(player);
 
 // Create the game over screen and hide it from view
 var gameOver = new PIXI.Container();
-gameOverPicture = new PIXI.Sprite(PIXI.Texture.fromImage("sprites/gameover.png"));
+gameOverPicture = new PIXI.Sprite(textures.gameover);
 gameOverPicture.position.x = 0;
 gameOverPicture.position.y = 0;
 gameOver.visible = false;
@@ -43,19 +52,39 @@ stage.addChild(gameOver);
 
 // Create and add score counter
 var score = 0;
-var text = new PIXI.Text("Score: 0", {font: "20px Desyrel", fill: "red"});
-stage.addChild(text);
+var scoreText = new PIXI.Text("Score: 0", {font: "30px Impact", fill: "#ac3232", strokeThickness: 5});
+scoreText.position.x = 5;
+scoreText.position.y = 1;
+stage.addChild(scoreText);
 
-// Add the event listener for keypresses
-document.addEventListener('keydown', onKeyDown);
+// Create the intro screen with the calendar
+var calendar = new PIXI.Sprite(textures.calendar);
+enemies.position.x = 0;
+enemies.position.y = 0;
+stage.addChild(calendar);
+
+// Create the instructional text on intro
+var startText = new PIXI.Text("Click any key to start.", {font: "30px Impact", fill: "#ac3232", strokeThickness: 5});
+startText.position.x = width - 275;
+startText.position.y = height - 40;
+stage.addChild(startText);
+
+// Add the event listener for keypresses and mouse press
+document.addEventListener("keydown", onKeyDown);
+gameport.addEventListener("click", onKeyDown);
 
 // Function used to handle key presses and movement in game
 function onKeyDown(key) {
 
+	if (calendar.visible) {
+		calendar.visible = false;
+		startText.visible = false;
+	}
+
 	// Variable to check if the player actually pressed a valid key to move
 	var moved = false;
 	
-	// Up key or w
+	// Up arrow key or w
     if (key.keyCode === 87 || key.keyCode === 38) {
     	key.preventDefault();
         if (player.position.y > gridSize) {
@@ -64,7 +93,7 @@ function onKeyDown(key) {
         }
     }
 
-    // Down key or s
+    // Down arrow key or s
     if (key.keyCode === 83 || key.keyCode === 40) {
     	key.preventDefault();
         if (player.position.y < height - 2 * gridSize) {
@@ -73,7 +102,7 @@ function onKeyDown(key) {
         }
     }
 
-    // Left key or a
+    // Left arrow key or a
     if (key.keyCode === 65 || key.keyCode === 37) {
     	key.preventDefault();
         if (player.position.x > gridSize) {
@@ -82,7 +111,7 @@ function onKeyDown(key) {
         }
     }
 
-    // Right key or d
+    // Right arrow key or d
     if (key.keyCode === 68 || key.keyCode === 39) {
     	key.preventDefault();
         if (player.position.x != width - 2 * gridSize) {
@@ -97,7 +126,7 @@ function onKeyDown(key) {
     	updateScore();
     	moveEnemies();
 
-    	if(hitEnemy()) {
+    	if (hitEnemy()) {
     		gameOver.visible = true;
     		document.removeEventListener('keydown', onKeyDown);
     	}
@@ -166,13 +195,13 @@ function getSpawnCoords() {
 
 // Function used to simply update the current score, or turns the player has been alive
 function updateScore() {
-	text.text = "Score: " + ++score;
+	scoreText.text = "Score: " + ++score;
 }
 
 
 // Function used to spawn a new enemy
 function spawnEnemy() {
-	enemy = new PIXI.Sprite(PIXI.Texture.fromImage("sprites/enemy.png"));
+	enemy = new PIXI.Sprite(textures.enemies[Math.floor(Math.random()*textures.enemies.length)]);
 
 	// Ensure that the enemy cannot spawn on top of the player
 	do {
