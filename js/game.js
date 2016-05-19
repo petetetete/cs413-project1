@@ -28,12 +28,6 @@ floorPicture.position.x = 0;
 floorPicture.position.y = 0;
 stage.addChild(floorPicture);
 
-// Create the enemies container
-var enemies = new PIXI.Container();
-enemies.position.x = 0;
-enemies.position.y = 0;
-stage.addChild(enemies);
-
 // Create the player sprite and determine his spawn
 var player = new PIXI.Sprite(textures.player);
 playerSpawn = getSpawnCoords();
@@ -41,14 +35,20 @@ player.position.x = playerSpawn[0];
 player.position.y = playerSpawn[1];
 stage.addChild(player);
 
+// Create the enemies container
+var enemies = new PIXI.Container();
+enemies.position.x = 0;
+enemies.position.y = 0;
+stage.addChild(enemies);
+
 // Create the game over screen and hide it from view
 // Game over is a seperate container so that future features could be added
 var gameOver = new PIXI.Container();
-gameOverPicture = new PIXI.Sprite(textures.gameover);
-gameOverPicture.position.x = 0;
-gameOverPicture.position.y = 0;
+gameOverPic = new PIXI.Sprite(textures.gameover);
+gameOverPic.position.x = 0;
+gameOverPic.position.y = 0;
 gameOver.visible = false;
-gameOver.addChild(gameOverPicture);
+gameOver.addChild(gameOverPic);
 stage.addChild(gameOver);
 
 // Create and add score counter
