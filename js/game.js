@@ -58,6 +58,13 @@ scoreText.position.x = 5;
 scoreText.position.y = 1;
 stage.addChild(scoreText);
 
+// Create and hide the high score text element
+var hScoreText = new PIXI.Text("High Score: null", {font: "30px Impact", fill: "#ac3232", strokeThickness: 5});
+hScoreText.position.x = 5;
+hScoreText.position.y = height - 41;
+hScoreText.visible = false;
+stage.addChild(hScoreText);
+
 // Create the intro screen with the calendar
 var calendar = new PIXI.Sprite(textures.calendar);
 enemies.position.x = 0;
@@ -73,6 +80,10 @@ stage.addChild(startText);
 // Add the event listener for keypresses and mouse press
 document.addEventListener("keydown", onKeyDown);
 gameport.addEventListener("click", onKeyDown);
+
+// Check if local storage is availible
+var storable = (typeof(Storage) !== "undefined") ? true : false;
+var highScores = [];
 
 // Function used to handle key presses and movement in game
 function onKeyDown(key) {
@@ -140,6 +151,13 @@ function onKeyDown(key) {
     	if (hitEnemy()) {
     		// Bring up game over screen and disable event listeners
     		gameOver.visible = true;
+
+    		if (storable) {
+    			saveHScore();
+				loadHScores();
+				displayHScores();
+    		}
+    		
     		document.removeEventListener('keydown', onKeyDown);
     		gameport.removeEventListener("click", onKeyDown);
 
@@ -251,6 +269,46 @@ function spawnEnemy() {
 	enemies.addChildAt(enemy, 0);
 }
 
+// Function used to save scores in localstorage
+function saveHScore() {
+	highScores[highScores.length] = score;
+	localStorage.setItem("scores", JSON.stringify(highScores));
+}
+
+// Function used to load scores from localstorage
+function loadHScores() {
+	highScores = (localStorage.scores) ? highScores = JSON.parse(localStorage.scores) : highScores = [];
+}
+
+// Function used to redisplay high scores
+function displayHScores() {
+
+	// If there exists any high scores
+	if (highScores.length > 0) {
+
+		// Grab high scores div and display it
+		div = document.getElementById("high-scores");
+		div.style.display = "block";
+
+		// Resort the highscores array
+		highScores.sort(function(a, b){return b-a});
+
+		// Change the in-game high score display
+		hScoreText.text = "High Score: " + highScores[0];
+		hScoreText.visible = true;
+
+		// Generate the html for the high scores div
+		output = "<h1>Local High Scores</h1><ol>";
+		for (var i = 0; i < highScores.length; i++) {
+			if (i === 5) break;
+			output += "<li>" + highScores[i] + "</li>";
+		}
+
+		// Add generate html to the div
+		div.innerHTML = output + "</ol>";
+	}
+}
+
 // Function used to simply update the current score, or turns the player has been alive
 function updateScore() {
 	scoreText.text = "Score: " + score;
@@ -260,6 +318,12 @@ function updateScore() {
 function animate(timestamp) {
 	requestAnimationFrame(animate);
 	renderer.render(stage);
+}
+
+// Fetch and display scores if possible
+if (storable) {
+	loadHScores();
+	displayHScores();
 }
 
 // Kick it off!
